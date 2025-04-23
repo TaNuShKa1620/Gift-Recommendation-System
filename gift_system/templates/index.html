@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gift Recommendation System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="{{ url_for('static', filename='scripts.js') }}" defer></script>
+    <style>
+        .gift-card {
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            width: 200px;
+            margin: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .gift-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .gift-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .slideshow-container {
+            position: relative;
+            max-width: 100%;
+            margin: auto;
+        }
+
+        .prev, .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            width: auto;
+            margin-top: -22px;
+            padding: 16px;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            transition: 0.6s ease;
+            border-radius: 0 3px 3px 0;
+            user-select: none;
+        }
+
+        .next {
+            right: 0;
+            border-radius: 3px 0 0 3px;
+        }
+
+        .prev:hover, .next:hover {
+            background-color: rgba(0,0,0,0.8);
+        }
+
+        .form-section {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 30px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        .form-section label, .form-section select, .form-section button {
+            display: block;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .form-section select, .form-section button {
+            padding: 12px;
+            font-size: 18px;
+        }
+
+        header {
+            background: #7e2869;
+            color: white;
+            padding: 20px 40px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+            <h1 style="margin: 0;">Gift Recommendation System</h1>
+            <nav style="display: flex; gap: 30px; align-items: center;">
+                <a href="{{ url_for('index') }}" style="color: white; text-decoration: none;">Home</a>
+                <a href="{{ url_for('contact') }}" style="color: white; text-decoration: none;">Contact Us</a>
+                <a href="{{ url_for('about') }}" style="color: white; text-decoration: none;">About Us</a>
+                <div class="dropdown" style="position: relative;">
+                    <span class="dropdown-toggle" style="cursor: pointer;">Categories ▾</span>
+                    <ul class="dropdown-menu" style="display: none; position: absolute; top: 30px; background: white; color: #7e2869; list-style: none; padding: 10px; margin: 0; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+                        {% for category in categories %}
+                        <li><a href="#" style="color: #7e2869; text-decoration: none;">{{ category }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="dropdown" style="position: relative;">
+                    <span class="dropdown-toggle" style="cursor: pointer;">Occasions ▾</span>
+                    <ul class="dropdown-menu" style="display: none; position: absolute; top: 30px; background: white; color: #7e2869; list-style: none; padding: 10px; margin: 0; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+                        {% for occasion in occasions %}
+                        <li><a href="#" style="color: #7e2869; text-decoration: none;">{{ occasion }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="slideshow-container">
+        <div class="slide fade">
+            <img src="https://assets.winni.in/groot/2022/10/28/desktop/birthday-gifts-banners.jpg" alt="Birthday Gifts" class="hero-image">
+        </div>
+        <div class="slide fade">
+            <img src="https://www.bradfordsbakers.com/media/iopt/catalog/category/Gift_Hamper_Banner.webp" alt="Gift Hamper" class="hero-image">
+        </div>
+        <div class="slide fade">
+            <img src="https://img.freepik.com/premium-vector/vector-realistic-gift-box-set_187548-1496.jpg" alt="Banner 2" class="hero-image">
+        </div>
+        <a class="prev" onclick="changeSlide(-1)">&#10094;</a>
+        <a class="next" onclick="changeSlide(1)">&#10095;</a>
+    </div>
+
+    <div class="gift-grid" style="display: flex; flex-wrap: wrap; justify-content: center; margin-top: 30px;">
+        <div class="gift-card">
+            <img src="https://plus.unsplash.com/premium_photo-1676475964992-6404b8db0b53?w=600&auto=format&fit=crop&q=60" alt="Flowers">
+            <h3>Flowers</h3>
+            <p>₹499</p>
+        </div>
+        <div class="gift-card">
+            <img src="https://images.unsplash.com/photo-1566977776052-6e61e35bf9be?w=600&auto=format&fit=crop&q=60" alt="Perfume">
+            <h3>Perfume</h3>
+            <p>₹999</p>
+        </div>
+        <div class="gift-card">
+            <img src="https://images.unsplash.com/photo-1631965004544-1762fc696476?w=600&auto=format&fit=crop&q=60" alt="Pendant">
+            <h3>Pendant</h3>
+            <p>₹799</p>
+        </div>
+        <div class="gift-card">
+            <img src="https://images.unsplash.com/photo-1621939514649-280e2ee25f60?w=600&auto=format&fit=crop&q=60" alt="Chocolates">
+            <h3>Chocolates</h3>
+            <p>₹299</p>
+        </div>
+        <div class="gift-card">
+            <img src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=600&auto=format&fit=crop&q=60" alt="Gift Box">
+            <h3>Gift Box</h3>
+            <p>₹699</p>
+        </div>
+    </div>
+
+    <section class="form-section">
+        <h2>Find the Perfect Gift</h2>
+        <form method="POST" action="/">
+            <label for="age">Select Age Group:</label>
+<select id="age" name="age" required>
+    <option value="">-- Choose Age Group --</option>
+    <option value="Child (0-12)">Child (0-12)</option>
+    <option value="Teen (13-19)">Teen (13-19)</option>
+    <option value="Adult (20-40)">Adult (20-40)</option>
+    <option value="Senior (40+)">Senior (40+)</option>
+    <option value="All">All</option>
+</select>
+
+<label for="interest">Select Interest:</label>
+<select id="interest" name="interest" required>
+    <option value="">--Choose interest--</option>
+    <option value="Toys">Toys</option>
+    <option value="Books">Books</option>
+    <option value="Gadgets">Gadgets</option>
+    <option value="Fashion">Fashion</option>
+    <option value="Flowers">Flowers</option>
+    <option value="Sweets">Sweets</option>
+    
+</select>
+
+            <button type="submit">Find Gift</button>
+        </form>
+    </section>
+
+    <footer style="background: #7e2869; color: white; padding: 20px; text-align: center; margin-top: 50px;">
+        <p>&copy; 2025 Gift Recommendation System. All rights reserved.</p>
+        <p>
+            <a href="{{ url_for('contact') }}" style="color: white; text-decoration: none; margin-right: 15px;">Contact Us</a>
+            <a href="{{ url_for('about') }}" style="color: white; text-decoration: none;">About Us</a>
+        </p>
+    </footer>
+
+    <script>
+        let slideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+
+        function changeSlide(n) {
+            slideIndex += n;
+            if (slideIndex >= slides.length) slideIndex = 0;
+            if (slideIndex < 0) slideIndex = slides.length - 1;
+            slides.forEach((slide, index) => {
+                slide.style.display = index === slideIndex ? 'block' : 'none';
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            slides.forEach((slide, index) => {
+                slide.style.display = index === 0 ? 'block' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <title>Recommended Gifts</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        header nav a {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 0 10px;
+            background-color: #7e2869;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        header nav a:hover {
+            background-color: #a03c8d;
+        }
+
+        footer {
+            background: #7e2869;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border-top: 3px solid #a03c8d;
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .gift-results {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+            padding-top: 30px;
+        }
+
+        .gift-card {
+            width: 250px;
+            border: 2px solid #ffb6c1;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 16px;
+            background-color: #ffffff;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .gift-card:hover {
+            transform: scale(1.05);
+        }
+
+        .gift-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .gift-card h3 {
+            font-size: 18px;
+            color: #ff4081;
+            margin-top: 10px;
+        }
+
+        .gift-card p {
+            font-size: 15px;
+            color: #555;
+            margin: 5px 0;
+        }
+
+        .buy-link {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 16px;
+            background-color: #ff4081;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .buy-link:hover {
+            background-color: #e91e63;
+        }
+    </style>
+<style type="text/css" id="operaUserStyle"></style></head>
+<body>
+    <header style="background: #7e2869; color: white; padding: 20px;">
+        <h1 style="text-align: center;">Gift Finder Results</h1>
+        <nav style="text-align: center;">
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('contact') }}">Contact Us</a>
+            <a href="{{ url_for('about') }}">About Us</a>
+        </nav>
+    </header>
+
+    <main style="text-align: center;">
+        <h2 style="margin-top: 30px;">Recommended Gifts 🎁</h2>
+       
+        {% if gifts %}
+            <div class="gift-grid" style="display: flex; flex-wrap: wrap; justify-content: center; margin-top: 30px;">
+                {% for gift in gifts %}
+                    <div class="gift-card">
+                        <img src="{{ gift.image_url }}" alt="{{ gift.name }}">
+                        <h3>{{ gift.name }}</h3>
+                        <p>Age Group: {{ gift.age_group }}</p>
+                        <p>Interest: {{ gift.interest }}</p>
+                        <p>Price: {{ gift.price }}</p>
+                        <a class="buy-link" href="{{ gift.buy_link }}" target="_blank">Buy Now 🛍️</a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p style="margin-top: 20px;">No gifts found for your selection. 🎁</p>
+        {% endif %}
+          
+
+        
+        <a href="/" style="display: inline-block; margin-top: 20px; text-decoration: none; color: white; background: #7e2869; padding: 10px 20px; border-radius: 5px;">Back to Home</a>
+          
+        </main>
+<script>
+    // Function to parse age range and check if input age matches
+        function isAgeInRange(age, ageGroup) {
+            if (ageGroup === "All") return true;
+            const range = ageGroup.match(/\((\d+)-(\d+)\)/) || ageGroup.match(/\((\d+)\+\)/);
+            if (!range) return false;
+            if (ageGroup.includes("+")) {
+                return age >= parseInt(range[1]);
+            }
+            const [min, max] = [parseInt(range[1]), parseInt(range[2])];
+            return age >= min && age <= max;
+        }
+
+        // Function to display gifts
+        function displayGifts(giftsToShow) {
+            const giftGrid = document.querySelector(".gift-grid");
+            giftGrid.innerHTML = ""; // Clear previous gifts
+            if (giftsToShow.length === 0) {
+                giftGrid.innerHTML = '<p class="no-gifts">No gifts found for this age and interest.</p>';
+                return;
+            }
+            giftsToShow.forEach(gift => {
+                const giftCard = document.createElement("div");
+                giftCard.className = "gift-card";
+                giftCard.innerHTML = `
+                    <img src="${gift.image}" alt="${gift.name}">
+                    <h3>${gift.name}</h3>
+                    <p>Age Group: ${gift.ageGroup}</p>
+                    <p>${gift.interest}</p>
+                    <p>Price: ${gift.price}</p>
+                    <a class="buy-link" href="${gift.link}" target="_blank">Buy Now 🛍️</a>
+                `;
+                giftGrid.appendChild(giftCard);
+            });
+        }
+
+        // Form submission handler
+        document.getElementById("giftForm").addEventListener("submit", (e) => {
+            e.preventDefault();
+            const age = parseInt(document.getElementById("ageInput").value);
+            const interest = document.getElementById("interestInput").value;
+
+            // Filter gifts
+            const filteredGifts = gifts.filter(gift => 
+                isAgeInRange(age, gift.ageGroup) && 
+                gift.interest.toLowerCase() === interest.toLowerCase()
+            );
+
+            // Display filtered gifts
+            displayGifts(filteredGifts);
+        });
+
+        // Initially display all gifts
+        displayGifts(gifts);
+    </script>
+    
+    <footer style="background: #7e2869; color: white; padding: 20px; text-align: center; margin-top: 50px;">
+        <p>© 2025 Gift Recommendation System. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
